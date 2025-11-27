@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { Lilita_One } from 'next/font/google'
 import Link from "next/link";
 import LandingButton from '@/src/components/landingButton';
+import Footer from '@/src/components/footer';
 
 const lilita = Lilita_One({ weight: '400', subsets: ['latin'] })
 
@@ -28,14 +29,17 @@ export default function LandingPage() {
         </div>
       </div> 
 
-      <div className="flex flex-col items-center mt-[20px] ml-[100px] mr-[100px]">
-        <div className="grid grid-cols-2 gap-2">
+      <div className="flex items-center mt-[20px] ml-[100px] mr-[100px]">
+        <div className="grid grid-cols-2 gap-y-[20px]">
           <LandingButton linkName="/guess" imgSrc="/brawler_button.png" altText="GUESS THE BRAWLER"></LandingButton>
           <LandingButton linkName="/guess" imgSrc="/skills_button.png" altText="GUESS THE SKILLS"></LandingButton>
           <LandingButton linkName="/guess" imgSrc="/skins_button.png" altText="GUESS THE SKINS"></LandingButton>
           <LandingButton linkName="/guess" imgSrc="/voicelines_button.png" altText="GUESS THE VOICELINES"></LandingButton>
         </div>
       </div>
+      
+      <Footer />
+
     </main>
   )
 
