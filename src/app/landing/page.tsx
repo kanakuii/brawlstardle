@@ -3,15 +3,15 @@ import { Lilita_One } from 'next/font/google'
 import Link from "next/link";
 import LandingButton from '@/src/components/landingButton';
 import Footer from '@/src/components/footer';
+import Logo from '@/src/components/logo';
 
 const lilita = Lilita_One({ weight: '400', subsets: ['latin'] })
 
 export default function LandingPage() {
   return (
     <main>
-      <div className="flex justify-center items-center h-40 bg-gradient-to-b from-purple-900 to-blue-900">
-        <img className="w-[30%]" src="/logo.png" alt="logo"/>
-      </div>
+      <Logo />
+      
       <div className="flex justify-center">
         <div className="bg-[#2A1177] w-[90%]">
           <h1 className={lilita.className} style={{
@@ -37,7 +37,7 @@ export default function LandingPage() {
           <LandingButton linkName="/guess" imgSrc="/voicelines_button.png" altText="GUESS THE VOICELINES"></LandingButton>
         </div>
       </div>
-      
+
       <Footer />
 
     </main>
