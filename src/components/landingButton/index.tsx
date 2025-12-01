@@ -7,7 +7,7 @@ export default function LandingButton({ linkName, imgSrc, altText }: { linkName:
   return (
     <div className="hover:scale-105 transition-transform duration-100">
         <Link href={linkName}>
-            <div className="w-[200px] absolute top-0 left-0 mt-[50px] ml-[330px] text-center">
+            <div className="w-[200px] absolute top-0 left-0 right-0 mt-[50px] ml-[300px] mr-[200px] text-center">
                 <h1 className={lilita.className} style={{
                     color: "white",
                     WebkitTextStrokeWidth: "6px",
