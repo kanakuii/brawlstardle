@@ -3,6 +3,7 @@ import { Lilita_One } from 'next/font/google'
 import LandingButton from '@/src/components/landingButton';
 import Footer from '@/src/components/footer';
 import Logo from '@/src/components/logo';
+import Button from '@/src/components/button';
 import { useState } from "react";
 
 const lilita = Lilita_One({ weight: '400', subsets: ['latin'] })
@@ -74,9 +75,12 @@ export default function LandingPage() {
             maxHeight: '80%',
             overflowY: 'auto'
           }}>
-            <h1 className={`${lilita.className} info-heading`}>
-              About BrawlStardle
-            </h1>
+            <div className='flex justify-between'> 
+              <h1 className={`${lilita.className} info-heading`}>
+                About BrawlStardle
+              </h1>
+              <h1 className={`text-[#D32F2F] ${lilita.className} info-heading hover:scale-110 transition-transform duration-100`} onClick={() => setShowInfo(false)}>X</h1> 
+            </div> 
             <hr></hr>
             <p className={`${lilita.className} info-paragraph`}>
               Brawlstardle is a guessing game based on the mobile game Brawl Stars. Puzzles reset daily and you can
@@ -107,12 +111,8 @@ export default function LandingPage() {
               BrawlStardle is not endorsed or sponsored by Supercell.
             </p>
 
-            <button 
-              onClick={() => setShowInfo(false)}
-              style={{ backgroundColor: 'white', color: 'black', padding: '10px 20px', marginTop: '20px' }}
-            >
-              Close
-            </button>
+
+            <Button onClick={() => setShowInfo(false)} imgSrc="blue_button.svg" altText="Close"></Button>
           </div>
         </div>
       )}
