@@ -108,7 +108,10 @@ export default function LandingPage() {
             <hr></hr>
             <p className={`${lilita.className} info-paragraph`}>
               This game was inspired by Wordle and Valdle and used assets from the Supercell Fan Kit.
-              BrawlStardle is not endorsed or sponsored by Supercell.
+              BrawlStardle is unofficial and is not endorsed by Supercell. 
+            </p> 
+            <p className={`${lilita.className} info-paragraph`}>For more information, see &nbsp;
+              <a href="https://www.supercell.com/fan-content-policy"><span className="text-[#FFE35B]">Supercell's Fan Content Policy</span></a>
             </p>
 
 

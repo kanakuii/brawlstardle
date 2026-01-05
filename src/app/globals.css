@@ -69,3 +69,27 @@ body {
 ::-webkit-scrollbar-corner {
   background-color: #ccc;
 }
+
+.tile-flip {
+  animation: tileFlip 1000ms ease forwards;
+  transform-style: preserve-3d;
+}
+
+@keyframes tileFlip {
+  0% {
+    transform: rotateX(0deg);
+    background-color: #1b2a57; /* pre-reveal */
+  }
+  49% {
+    transform: rotateX(90deg);
+    background-color: #1b2a57; /* still hidden */
+  }
+  50% {
+    transform: rotateX(90deg);
+    background-color: var(--tile-color); /* reveal color at midpoint */
+  }
+  100% {
+    transform: rotateX(0deg);
+    background-color: var(--tile-color);
+  }
+}
