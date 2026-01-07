@@ -114,7 +114,7 @@ function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
 export default function GuessPage() {
   const all = useMemo(() => getAllBrawlers(), []);
   const answer = useMemo(() => {
-    const idx = getDailyRandomIndex(all.length, "2026-01-01");
+    const idx = getDailyRandomIndex(all.length, getTodayKey());
     return all[idx];
   }, [all]);
 
@@ -246,7 +246,7 @@ export default function GuessPage() {
     }
   }
 
-  function brawlerGifSlug(key: string) {
+  function brawlerSlug(key: string) {
     return key
       .trim()
       .toLowerCase()
@@ -255,7 +255,7 @@ export default function GuessPage() {
       .replace(/^_+|_+$/g, ""); // trim underscores
   }
 
-  const gifSrc = `/brawler_gifs/${brawlerGifSlug(answer.key)}_won.gif`;
+  const gifSrc = `/brawler_gifs/${brawlerSlug(answer.key)}_won.gif`;
 
   return (
     <main> 
@@ -323,7 +323,7 @@ export default function GuessPage() {
           return (
             <div key={guessKey} className="grid grid-cols-5 gap-6 place-items-center">
               <Guesses state={r.brawler.state} delayMs={0} animate={!!r.animate}>
-                <img className="h-[120px] w-[150px]" src={`/brawler_portraits/${r.brawler.value}_portrait.png`} alt={`${r.brawler.value}`}></img> 
+                <img className="h-[120px] w-[150px]" src={ `/brawler_portraits/${brawlerSlug(r.brawler.value)}_portrait.png`} alt={`${r.brawler.value}`}></img> 
               </Guesses>
 
               <Guesses state={r.gender.state} delayMs={150} animate={!!r.animate}>
@@ -351,7 +351,7 @@ export default function GuessPage() {
           <div className="relative flex flex-col justify-center mt-[10px]">
             <img alt="" src="stats.svg" className="w-[75%] mx-auto mt-[20px]"></img>
             <div className="flex flex-row justify-center absolute top-[8%] left-[0] right-[0]">
-              <img className="h-[275px]" alt="" src={`/brawler_gifs/${brawlerGifSlug(answer.key)}_win.gif`}></img> 
+              <img className="h-[275px]" alt="" src={`${gifSrc}`}></img> 
               <div className="relative">
                 <h1 className={`${lilita.className} info-heading !text-[#FFE35B] -rotate-1`}>
                   TODAY&apos;S BRAWLER!
