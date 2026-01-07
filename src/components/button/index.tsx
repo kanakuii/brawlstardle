@@ -7,7 +7,7 @@ export default function Button({ onClick, imgSrc, altText }: { onClick: () => vo
   return (
     <div className="hover:scale-105 transition-transform duration-100">
         <div onClick={onClick} className="cursor-pointer flex justify-center items-center relative">
-            <img className="w-[30%]" src={imgSrc} alt={altText}/>
+            <img className="w-[200px]" src={imgSrc} alt={altText}/>
             <div className="absolute top-0 left-0 right-0 mt-[-10px]">
                 <h1 className={lilita.className} style={{
                     color: "white",

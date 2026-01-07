@@ -1,11 +1,13 @@
-import { useState } from 'react';
-import CellState from '@/src/app/guess/page';
+import type { CellState } from "@/src/app/guess/page";
 
-export type state = keyof typeof CellState;
-
-export default function Guesses({ children, state, delayMs, animate, }: {
-children: React.ReactNode;
-  state: state;
+export default function Guesses({
+  children,
+  state,
+  delayMs,
+  animate,
+}: {
+  children: React.ReactNode;
+  state: CellState;
   delayMs: number;
   animate: boolean;
 }) {

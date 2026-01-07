@@ -8,26 +8,56 @@ import Logo from '@/src/components/logo';
 import { useState, useEffect, useMemo } from "react";
 import { data } from '@/src/scripts/brawlers';
 import Guesses from '@/src/components/guesses';
-import ConfettiEffect from '@/src/components/confetti';
+import Button from '@/src/components/button';
+import { useRef } from "react";
+import Confetti from "canvas-confetti";
+import { useRouter } from 'next/navigation'; 
 
 const lilita = Lilita_One({ weight: '400', subsets: ['latin'] })
 
 
 export type BrawlerKey = keyof typeof data;
 
-export function getDailyIndex(total: number, startDateISO = "2026-01-01") {
+// Get new brawler for each day
+export function getDailyIndex(startDateISO = "2026-01-01") {
   const start = new Date(startDateISO);
   const today = new Date();
   start.setHours(0,0,0,0);
   today.setHours(0,0,0,0);
   const diffDays = Math.floor((today.getTime() - start.getTime()) / 86400000);
-  return ((diffDays % total) + total) % total;
+  return diffDays;
 }
 
+// Get today's date
 export function getTodayKey() {
   const d = new Date();
   d.setHours(0,0,0,0);
   return d.toISOString().slice(0, 10);
+}
+
+function hashStringToInt(str: string) {
+  let h = 2166136261; // FNV-1a-ish
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0; // unsigned
+}
+
+// Mulberry32 PRNG (small + good enough for games)
+function mulberry32(seed: number) {
+  return function () {
+    let t = (seed += 0x6D2B79F5);
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+export function getDailyRandomIndex(total: number, dateKey = getTodayKey()) {
+  const seed = hashStringToInt(dateKey);
+  const rand = mulberry32(seed);
+  return Math.floor(rand() * total);
 }
 
 export type Brawler = {
@@ -39,7 +69,7 @@ export type Brawler = {
   released: number;
 };
 
-export type CellState = "correct" | "wrong" | "higher" | "lower";
+export type CellState = "correct" | "wrong";
 
 export type GuessRow = {
   brawler: { value: string; state: CellState };
@@ -50,14 +80,15 @@ export type GuessRow = {
   animate?: boolean;
 };
 
+// Makes names readable
 export function toDisplayName(key: string) {
-  // keep special chars but Title Case words
   return key
     .split(" ")
     .map(w => (w.length ? w[0].toUpperCase() + w.slice(1) : w))
     .join(" ");
 }
 
+// Makes all brawlers into brawler type
 export function getAllBrawlers(): Brawler[] {
   return Object.entries(data).map(([key, v]) => ({
     key,
@@ -69,6 +100,7 @@ export function getAllBrawlers(): Brawler[] {
   }));
 }
 
+
 export function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
   return {
     brawler: { value: guess.name, state: guess.key === answer.key ? "correct" : "wrong" },
@@ -79,24 +111,28 @@ export function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
   };
 }
 
-function cellClasses(state: CellState) {
-  if (state === "correct") return "!bg-[#34eb40]";
-  return "!bg-[#db2727]";
-}
-
 export default function GuessPage() {
-  const [isExploding, setIsExploding] = useState(false)
   const all = useMemo(() => getAllBrawlers(), []);
   const answer = useMemo(() => {
-    const idx = getDailyIndex(all.length, "2026-01-01");
+    const idx = getDailyRandomIndex(all.length, "2026-01-01");
     return all[idx];
   }, [all]);
 
-  const storageKey = useMemo(() => `brawlwordle:${getTodayKey()}`, []);
+  console.log(answer);
+
+  const diffDays = getDailyIndex("2026-01-01");
+
+  const storageKey = useMemo(() => `brawlstardle:${getTodayKey()}`, []);
   const [guessKeys, setGuessKeys] = useState<string[]>([]);
   const [rows, setRows] = useState<GuessRow[]>([]);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<"playing" | "won">("playing");
+
+  const router = useRouter();
+
+  const homeButton = () => {
+    router.push('/');
+  }
 
   useEffect(() => {
     const raw = localStorage.getItem(storageKey);
@@ -115,15 +151,14 @@ export default function GuessPage() {
 
     const newRows = guessed.map((g, idx) => ({
       ...judgeGuess(g, answer),
-      animate: idx === guessed.length - 1, // only newest row flips
+      animate: idx === guessed.length - 1, 
     }));
 
     setRows(newRows);
 
     if (guessed.some(g => g.key === answer.key)) {
       setStatus("won"); 
-      setIsExploding(true);
-      setTimeout(() => setIsExploding(false), 5000);
+      HandleConfetti(); 
     } else setStatus("playing");
   }, [guessKeys, all, answer]);
 
@@ -147,15 +182,79 @@ export default function GuessPage() {
     setQuery("");
   }
 
+  const statsRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (status === "won" && statsRef.current) {
+      setTimeout(() => {
+        statsRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 1000);
+    }
+  }, [status]);
+
+  const HandleConfetti = () => {
+    Confetti({
+      particleCount: 100,
+      angle: 60,
+      spread: 55, 
+      origin: {x: 0, y: 0.6},
+    }); 
+    Confetti({
+      particleCount: 100,
+      angle: 120,
+      spread: 55, 
+      origin: {x: 1, y: 0.6},
+    });
+  };
+
+  function tileEmoji(state: CellState) {
+    return state === "correct" ? "🟩" : "🟥";
+  }
+
+  function buildShareText() {
+    const header = `I got today's BrawlStardle ${diffDays} in ${guessKeys.length} tries!`;
+
+    const grid = rows
+      .map(r => [
+        tileEmoji(r.brawler.state),
+        tileEmoji(r.gender.state),
+        tileEmoji(r.class.state),
+        tileEmoji(r.rarity.state),
+        tileEmoji(r.release.state),
+      ].join(""))
+      .join("\n");
+
+    return `${header}\n${grid}`;
+  }
+
+  async function handleShare() {
+    const text = buildShareText();
+
+    try {
+      await navigator.clipboard.writeText(text);
+      // optional: show a toast / alert
+      alert("Copied results to clipboard!");
+    } catch {
+      // fallback for older browsers
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      alert("Copied results to clipboard!");
+    }
+  }
+
   return (
-    <main>
+    <main> 
       <Logo />
 
       <div className="relative flex flex-col justify-center mt-[10px]">
         <img src="guess_input.svg" className="w-[38%] mx-auto"></img>
-        <div className="w-[40%] absolute top-[12%] left-[30%]">
+        <div className="w-[40%] absolute top-[12%] left-[30%] right-[30%]">
             <h1 className={`${lilita.className} info-heading text-center`}>
-                GUESS THE BRAWLER #1
+                GUESS THE BRAWLER #{diffDays}
             </h1>
         </div>
         <form onSubmit={(e) => {
@@ -190,58 +289,93 @@ export default function GuessPage() {
 
 
       <div className="ml-[250px] mr-[250px] grid grid-cols-5 gap-6">
-        <h1 className={`${lilita.className} info-heading text-center mt-[30px] mb-[10px]`}>
+        <h1 className={`${lilita.className} info-heading underline decoration-[#FFFFFF] text-center mt-[30px] mb-[10px]`}>
           Brawler
         </h1>
-        <h1 className={`${lilita.className} info-heading text-center mt-[30px] mb-[10px]`}>
+        <h1 className={`${lilita.className} info-heading underline decoration-[#FFFFFF] text-center mt-[30px] mb-[10px]`}>
           Gender
         </h1>
-        <h1 className={`${lilita.className} info-heading text-center mt-[30px] mb-[10px]`}>
+        <h1 className={`${lilita.className} info-heading underline decoration-[#FFFFFF] text-center mt-[30px] mb-[10px]`}>
           Class
         </h1>
-        <h1 className={`${lilita.className} info-heading text-center mt-[30px] mb-[10px]`}>
+        <h1 className={`${lilita.className} info-heading underline decoration-[#FFFFFF] text-center mt-[30px] mb-[10px]`}>
           Rarity
         </h1>
-        <h1 className={`${lilita.className} info-heading text-center mt-[30px] mb-[10px]`}>
+        <h1 className={`${lilita.className} info-heading underline decoration-[#FFFFFF] text-center mt-[30px] mb-[10px]`}>
           Release
         </h1>
       </div>
 
       <div className="ml-[250px] mr-[250px] mt-4 space-y-10">
-        {[...rows].reverse().map((r, i) => (
-          <div key={i} className="grid grid-cols-5 gap-6 place-items-center">
-            <Guesses state={r.brawler.state} delayMs={0} animate={!!r.animate}>
-              <h2 className={`${lilita.className} info-heading`}>{r.brawler.value}</h2>
-            </Guesses>
+        {[...rows].reverse().map((r, i) => {
+          const guessKey = guessKeys[guessKeys.length - 1 - i]; 
+          return (
+            <div key={guessKey} className="grid grid-cols-5 gap-6 place-items-center">
+              <Guesses state={r.brawler.state} delayMs={0} animate={!!r.animate}>
+                <h2 className={`${lilita.className} info-heading`}>{r.brawler.value}</h2>
+              </Guesses>
 
-            <Guesses state={r.gender.state} delayMs={150} animate={!!r.animate}>
-              <h2 className={`${lilita.className} info-heading`}>{r.gender.value}</h2>
-            </Guesses>
+              <Guesses state={r.gender.state} delayMs={150} animate={!!r.animate}>
+                <h2 className={`${lilita.className} info-heading`}>{r.gender.value}</h2>
+              </Guesses>
 
-            <Guesses state={r.class.state} delayMs={300} animate={!!r.animate}>
-              <h2 className={`${lilita.className} info-heading`}>{r.class.value}</h2>
-            </Guesses>
+              <Guesses state={r.class.state} delayMs={300} animate={!!r.animate}>
+                <h2 className={`${lilita.className} info-heading`}>{r.class.value}</h2>
+              </Guesses>
 
-            <Guesses state={r.rarity.state} delayMs={450} animate={!!r.animate}>
-              <h2 className={`${lilita.className} info-heading`}>{r.rarity.value}</h2>
-            </Guesses>
+              <Guesses state={r.rarity.state} delayMs={450} animate={!!r.animate}>
+                <h2 className={`${lilita.className} info-heading`}>{r.rarity.value}</h2>
+              </Guesses>
 
-            <Guesses state={r.release.state} delayMs={600} animate={!!r.animate}>
-              <h2 className={`${lilita.className} info-heading`}>{r.release.value}</h2>
-            </Guesses>
-          </div>
-        ))}
+              <Guesses state={r.release.state} delayMs={600} animate={!!r.animate}>
+                <h2 className={`${lilita.className} info-heading`}>{r.release.value}</h2>
+              </Guesses>
+            </div>
+          );
+        })}
       </div>
 
-      {isExploding && <ConfettiEffect />}
-
       {status === "won" && (
-        <div className="mt-6 text-white text-xl">
-          You got it! ✅ The answer was {answer.name}.
+        <div ref={statsRef} className="scroll-mt-20">
+          <div className="relative flex flex-col justify-center mt-[10px]">
+            <img src="stats.svg" className="w-[75%] mx-auto mt-[20px]"></img>
+            <div className="flex flex-row justify-center absolute top-[8%] left-[0] right-[0]">
+              <img src="/brawler_gifs/bo_win.gif"></img> 
+              <div className="relative">
+                <h1 className={`${lilita.className} info-heading !text-[#FFE35B] -rotate-1`}>
+                  TODAY'S BRAWLER!
+                </h1>
+                <img src="namecard.svg"></img> 
+                <div className="absolute top-[0%] left-[5%] -rotate-2 w-[75%]">
+                  <h1 className={`${lilita.className} info-heading !text-[90px] !mb-[0px]`}>{answer.name.toUpperCase()}</h1>
+                  <h1 className={`${lilita.className} info-heading !text-[30px] !mt-[0px] !mb-[0px]`}>{answer.class.toUpperCase()}</h1>
+                  <h1 className={`${lilita.className} info-heading !text-[30px] !mt-[0px] text-right`}>TRIES: {guessKeys.length}</h1> 
+                </div> 
+              </div> 
+            </div>
+            <div className="flex justify-center absolute top-[43%] left-[0] right-[0]"> 
+              <h1 className={`${lilita.className} info-heading`}>STATS</h1> 
+            </div> 
+            <div className="absolute top-[50%] left-[20%] right-[20%] grid grid-cols-4 place-items-center">
+              <h1 className={`${lilita.className} info-heading text-center`}>GAMES<br></br><span className="underline decoration-[#FFFFFF]"> WON</span> </h1>
+              <h1 className={`${lilita.className} info-heading text-center`}>AVERAGE <span className="underline decoration-[#FFFFFF]"> GUESSES</span></h1> 
+              <h1 className={`${lilita.className} info-heading text-center`}>CURRENT <span className="underline decoration-[#FFFFFF]"> STREAK</span></h1> 
+              <h1 className={`${lilita.className} info-heading text-center`}>HIGHEST <span className="underline decoration-[#FFFFFF]"> STREAK</span></h1>
+              <h1 className={`${lilita.className} info-heading text-center`}>1</h1> 
+              <h1 className={`${lilita.className} info-heading text-center`}>1</h1> 
+              <h1 className={`${lilita.className} info-heading text-center`}>1</h1> 
+              <h1 className={`${lilita.className} info-heading text-center`}>1</h1> 
+            </div> 
+            <div className="absolute top-[83%] left-[0] right-[0]"> 
+              <Button onClick={() => handleShare()} imgSrc="blue_button.svg" altText="Share"></Button>
+            </div>
+          </div>
+          <div className="flex flex-row justify-center gap-[20px]">
+            <Button onClick={() => homeButton()} imgSrc="blue_button.svg" altText="Home"></Button>
+            <Button onClick={() => homeButton()} imgSrc="yellow_button.svg" altText="Next"></Button>
+          </div> 
         </div>
       )}
-
-
 
     </main>
   )  
