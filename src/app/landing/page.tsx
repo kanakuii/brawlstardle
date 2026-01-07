@@ -14,7 +14,7 @@ export default function LandingPage() {
 
         <div>
           <div className="absolute top-0 ml-[120px]">
-              <img className="w-[55%]" src="/checkmark.png"></img>
+              <img alt="" className="w-[55%]" src="/checkmark.png"></img>
           </div>
           <div className="flex justify-center">
             <div className="bg-[#2A1177] w-[85%] mt-[13px]">

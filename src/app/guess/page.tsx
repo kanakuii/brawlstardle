@@ -251,7 +251,7 @@ export default function GuessPage() {
       <Logo />
 
       <div className="relative flex flex-col justify-center mt-[10px]">
-        <img src="guess_input.svg" className="w-[38%] mx-auto"></img>
+        <img alt="" src="guess_input.svg" className="w-[38%] mx-auto"></img>
         <div className="w-[40%] absolute top-[12%] left-[30%] right-[30%]">
             <h1 className={`${lilita.className} info-heading text-center`}>
                 GUESS THE BRAWLER #{diffDays}
@@ -281,7 +281,7 @@ export default function GuessPage() {
             </div>
           )}
           <button type="submit" disabled={status === "won"} className="hover:scale-105 transition-transform duration-100 bg-transparent border border-none absolute top-[63%] left-[62%] cursor-pointer">
-            <img src="arrow.svg" className="w-[45px] mx-auto mt-[5px]"></img>
+            <img alt="" src="arrow.svg" className="w-[45px] mx-auto mt-[5px]"></img>
           </button>
         </form>
 
@@ -338,14 +338,14 @@ export default function GuessPage() {
       {status === "won" && (
         <div ref={statsRef} className="scroll-mt-20">
           <div className="relative flex flex-col justify-center mt-[10px]">
-            <img src="stats.svg" className="w-[75%] mx-auto mt-[20px]"></img>
+            <img alt="" src="stats.svg" className="w-[75%] mx-auto mt-[20px]"></img>
             <div className="flex flex-row justify-center absolute top-[8%] left-[0] right-[0]">
-              <img src="/brawler_gifs/bo_win.gif"></img> 
+              <img alt="" src="/brawler_gifs/bo_win.gif"></img> 
               <div className="relative">
                 <h1 className={`${lilita.className} info-heading !text-[#FFE35B] -rotate-1`}>
-                  TODAY'S BRAWLER!
+                  TODAY&apos;S BRAWLER!
                 </h1>
-                <img src="namecard.svg"></img> 
+                <img alt="" src="namecard.svg"></img> 
                 <div className="absolute top-[0%] left-[5%] -rotate-2 w-[75%]">
                   <h1 className={`${lilita.className} info-heading !text-[90px] !mb-[0px]`}>{answer.name.toUpperCase()}</h1>
                   <h1 className={`${lilita.className} info-heading !text-[30px] !mt-[0px] !mb-[0px]`}>{answer.class.toUpperCase()}</h1>

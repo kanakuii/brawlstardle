@@ -14,12 +14,12 @@ export default function Footer() {
             <div className="flex items-center justify-center">
                 <div className="grid grid-cols-3 mt-[20px] mb-[20px] gap-[30px]">
                 <a href="https://github.com/kanakuii/brawlstardle">
-                    <img className="hover:scale-105 hover:fill-[#93CEFF] transition-all duration-100 w-[30px]" src="./Github.svg"></img>
+                    <img alt="" className="hover:scale-105 hover:fill-[#93CEFF] transition-all duration-100 w-[30px]" src="./Github.svg"></img>
                 </a>
                 <button className="bg-transparent border border-transparent" onClick={() => setShowInfo(true)}>
-                    <img className="hover:scale-105 hover:fill-[#93CEFF] transition-all duration-100 w-[30px]" src="./Info.svg"></img>
+                    <img alt="" className="hover:scale-105 hover:fill-[#93CEFF] transition-all duration-100 w-[30px]" src="./Info.svg"></img>
                 </button>
-                <img className="hover:scale-105 hover:fill-[#93CEFF] transition-all duration-100 w-[30px]" src="./Share.svg"></img>
+                <img alt="" className="hover:scale-105 hover:fill-[#93CEFF] transition-all duration-100 w-[30px]" src="./Share.svg"></img>
                 </div>
             </div>
 
