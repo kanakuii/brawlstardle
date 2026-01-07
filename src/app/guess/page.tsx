@@ -255,7 +255,7 @@ export default function GuessPage() {
       .replace(/^_+|_+$/g, ""); // trim underscores
   }
 
-  const gifSrc = `/brawler_gifs/${brawlerSlug(answer.key)}_won.gif`;
+  const gifSrc = `/brawler_gifs/${brawlerSlug(answer.key)}_win.gif`;
 
   return (
     <main> 
@@ -352,7 +352,7 @@ export default function GuessPage() {
             <img alt="" src="stats.svg" className="w-[75%] mx-auto mt-[20px]"></img>
             <div className="flex flex-row justify-center absolute top-[8%] left-[0] right-[0]">
               <img className="h-[275px]" alt="" src={`${gifSrc}`}></img> 
-              <div className="relative">
+              <div className="relative ml-[50px]">
                 <h1 className={`${lilita.className} info-heading !text-[#FFE35B] -rotate-1`}>
                   TODAY&apos;S BRAWLER!
                 </h1>
