@@ -26,7 +26,7 @@ export default function LandingPage() {
         </div> 
 
         <div className="flex items-center mt-[20px] ml-[150px] mr-[100px]">
-          <div className="grid grid-cols-2 gap-y-[20px]">
+          <div className="grid grid-cols-2 gap-y-[20px] place-items-center">
             <LandingButton linkName="/guess" imgSrc="/brawler_button.png" altText="GUESS THE BRAWLER"></LandingButton>
             <LandingButton linkName="/guess" imgSrc="/skills_button.png" altText="GUESS THE SKILLS"></LandingButton>
             <LandingButton linkName="/guess" imgSrc="/skins_button.png" altText="GUESS THE SKINS"></LandingButton>

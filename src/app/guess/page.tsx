@@ -262,7 +262,7 @@ export default function GuessPage() {
           console.log("submitted", { query, suggestions: suggestions.map(s => s.name) });
           if (suggestions[0]) submitGuess(suggestions[0]);
         }}>
-          <div className="absolute top-[63%] left-[33%]"> 
+          <div className="absolute top-[63%] left-[33%] right-[66%]"> 
             <input type="text" disabled={status === "won"} value={query} onChange={e => setQuery(e.target.value)} className={`${lilita.className} info-paragraph rounded-lg transform skew-x-[-5deg] w-[360px] h-[30px] bg-[#2A3045] border border-none p-[10px] rounded-[10px]`}></input>
           </div> 
           {suggestions.length > 0 && (
@@ -358,9 +358,9 @@ export default function GuessPage() {
             </div> 
             <div className="absolute top-[50%] left-[20%] right-[20%] grid grid-cols-4 place-items-center">
               <h1 className={`${lilita.className} info-heading text-center`}>GAMES<br></br><span className="underline decoration-[#FFFFFF]"> WON</span> </h1>
-              <h1 className={`${lilita.className} info-heading text-center`}>AVERAGE <span className="underline decoration-[#FFFFFF]"> GUESSES</span></h1> 
-              <h1 className={`${lilita.className} info-heading text-center`}>CURRENT <span className="underline decoration-[#FFFFFF]"> STREAK</span></h1> 
-              <h1 className={`${lilita.className} info-heading text-center`}>HIGHEST <span className="underline decoration-[#FFFFFF]"> STREAK</span></h1>
+              <h1 className={`${lilita.className} info-heading text-center`}>AVERAGE<br></br><span className="underline decoration-[#FFFFFF]"> GUESSES</span></h1> 
+              <h1 className={`${lilita.className} info-heading text-center`}>CURRENT<br></br><span className="underline decoration-[#FFFFFF]"> STREAK</span></h1> 
+              <h1 className={`${lilita.className} info-heading text-center`}>HIGHEST<br></br><span className="underline decoration-[#FFFFFF]"> STREAK</span></h1>
               <h1 className={`${lilita.className} info-heading text-center`}>1</h1> 
               <h1 className={`${lilita.className} info-heading text-center`}>1</h1> 
               <h1 className={`${lilita.className} info-heading text-center`}>1</h1> 
@@ -370,7 +370,7 @@ export default function GuessPage() {
               <Button onClick={() => handleShare()} imgSrc="blue_button.svg" altText="Share"></Button>
             </div>
           </div>
-          <div className="flex flex-row justify-center gap-[20px]">
+          <div className="flex flex-row justify-center gap-[20px] mt-[30px] mb-[50px]">
             <Button onClick={() => homeButton()} imgSrc="blue_button.svg" altText="Home"></Button>
             <Button onClick={() => homeButton()} imgSrc="yellow_button.svg" altText="Next"></Button>
           </div> 
