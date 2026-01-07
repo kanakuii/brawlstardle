@@ -1,4 +1,4 @@
-import type { CellState } from "@/src/app/guess/page";
+type CellState = "correct" | "wrong";
 
 export default function Guesses({
   children,
