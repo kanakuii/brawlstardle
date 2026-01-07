@@ -16,10 +16,10 @@ import { useRouter } from 'next/navigation';
 const lilita = Lilita_One({ weight: '400', subsets: ['latin'] })
 
 
-export type BrawlerKey = keyof typeof data;
+type BrawlerKey = keyof typeof data;
 
 // Get new brawler for each day
-export function getDailyIndex(startDateISO = "2026-01-01") {
+function getDailyIndex(startDateISO = "2026-01-01") {
   const start = new Date(startDateISO);
   const today = new Date();
   start.setHours(0,0,0,0);
@@ -29,7 +29,7 @@ export function getDailyIndex(startDateISO = "2026-01-01") {
 }
 
 // Get today's date
-export function getTodayKey() {
+function getTodayKey() {
   const d = new Date();
   d.setHours(0,0,0,0);
   return d.toISOString().slice(0, 10);
@@ -54,13 +54,13 @@ function mulberry32(seed: number) {
   };
 }
 
-export function getDailyRandomIndex(total: number, dateKey = getTodayKey()) {
+function getDailyRandomIndex(total: number, dateKey = getTodayKey()) {
   const seed = hashStringToInt(dateKey);
   const rand = mulberry32(seed);
   return Math.floor(rand() * total);
 }
 
-export type Brawler = {
+type Brawler = {
   key: string;
   name: string;
   rarity: string;
@@ -69,9 +69,9 @@ export type Brawler = {
   released: number;
 };
 
-export type CellState = "correct" | "wrong";
+type CellState = "correct" | "wrong";
 
-export type GuessRow = {
+type GuessRow = {
   brawler: { value: string; state: CellState };
   gender: { value: string; state: CellState };
   class: { value: string; state: CellState };
@@ -81,7 +81,7 @@ export type GuessRow = {
 };
 
 // Makes names readable
-export function toDisplayName(key: string) {
+function toDisplayName(key: string) {
   return key
     .split(" ")
     .map(w => (w.length ? w[0].toUpperCase() + w.slice(1) : w))
@@ -89,7 +89,7 @@ export function toDisplayName(key: string) {
 }
 
 // Makes all brawlers into brawler type
-export function getAllBrawlers(): Brawler[] {
+function getAllBrawlers(): Brawler[] {
   return Object.entries(data).map(([key, v]) => ({
     key,
     name: toDisplayName(key),
@@ -101,7 +101,7 @@ export function getAllBrawlers(): Brawler[] {
 }
 
 
-export function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
+function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
   return {
     brawler: { value: guess.name, state: guess.key === answer.key ? "correct" : "wrong" },
     gender: { value: guess.gender, state: guess.gender === answer.gender ? "correct" : "wrong" },
