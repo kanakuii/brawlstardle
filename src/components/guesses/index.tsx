@@ -16,7 +16,7 @@ export default function Guesses({
   return (
     <div
       className={[
-        "text-center border w-[150px] h-[150px] flex justify-center items-center mt-[10px]",
+        "text-center border w-[150px] h-[120px] flex justify-center items-center mt-[10px]",
         "border-[#000000] border-[5px] shadow-[5px_5px_2px_rgba(0,0,0,0.5)]",
         animate ? "tile-flip" : "",
       ].join(" ")}

@@ -212,7 +212,7 @@ export default function GuessPage() {
   }
 
   function buildShareText() {
-    const header = `I got the BrawlStardle ${diffDays} in ${guessKeys.length} tries!`;
+    const header = `I got the BrawlStardle #${diffDays} in ${guessKeys.length} tries!`;
 
     const grid = rows
       .map(r => [
@@ -246,6 +246,17 @@ export default function GuessPage() {
     }
   }
 
+  function brawlerGifSlug(key: string) {
+    return key
+      .trim()
+      .toLowerCase()
+      .replace(/['’]/g, "")     // remove apostrophes
+      .replace(/[^a-z0-9]+/g, "_") // spaces/punct -> _
+      .replace(/^_+|_+$/g, ""); // trim underscores
+  }
+
+  const gifSrc = `/brawler_gifs/${brawlerGifSlug(answer.key)}_won.gif`;
+
   return (
     <main> 
       <Logo />
@@ -271,7 +282,7 @@ export default function GuessPage() {
                 <button
                   type="button"
                   key={s.key}
-                  className="block w-full text-left px-3 py-2 hover:bg-slate-700/50 w-[100px]"
+                  className={`${lilita.className} info-paragraph block w-full text-left px-4 py-2 hover:bg-slate-700/50 w-[120px]`}
                   onClick={() => submitGuess(s)}
                   disabled={status === "won"}
                 >
@@ -312,7 +323,7 @@ export default function GuessPage() {
           return (
             <div key={guessKey} className="grid grid-cols-5 gap-6 place-items-center">
               <Guesses state={r.brawler.state} delayMs={0} animate={!!r.animate}>
-                <h2 className={`${lilita.className} info-heading`}>{r.brawler.value}</h2>
+                <img className="h-[120px] w-[150px]" src={`/brawler_portraits/${r.brawler.value}_portrait.png`} alt={`${r.brawler.value}`}></img> 
               </Guesses>
 
               <Guesses state={r.gender.state} delayMs={150} animate={!!r.animate}>
@@ -340,7 +351,7 @@ export default function GuessPage() {
           <div className="relative flex flex-col justify-center mt-[10px]">
             <img alt="" src="stats.svg" className="w-[75%] mx-auto mt-[20px]"></img>
             <div className="flex flex-row justify-center absolute top-[8%] left-[0] right-[0]">
-              <img alt="" src="/brawler_gifs/bo_win.gif"></img> 
+              <img className="h-[275px]" alt="" src={`/brawler_gifs/${brawlerGifSlug(answer.key)}_win.gif`}></img> 
               <div className="relative">
                 <h1 className={`${lilita.className} info-heading !text-[#FFE35B] -rotate-1`}>
                   TODAY&apos;S BRAWLER!
