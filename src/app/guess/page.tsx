@@ -274,7 +274,7 @@ export default function GuessPage() {
           if (suggestions[0]) submitGuess(suggestions[0]);
         }}>
           <div className="absolute top-[63%] left-[33%] right-[66%]"> 
-            <input type="text" disabled={status === "won"} value={query} onChange={e => setQuery(e.target.value)} className={`${lilita.className} info-paragraph rounded-lg transform skew-x-[-5deg] w-[360px] h-[30px] bg-[#2A3045] border border-none p-[10px] rounded-[10px]`}></input>
+            <input type="text" placeholder="Brawler Name" disabled={status === "won"} value={query} onChange={e => setQuery(e.target.value)} className={`text-[20px] text-[#FFFFFF] ${lilita.className} rounded-lg transform skew-x-[-5deg] w-[360px] h-[30px] bg-[#2A3045] border border-none p-[10px] rounded-[10px]`}></input>
           </div> 
           {suggestions.length > 0 && (
             <div className="absolute top-[80%] left-[33%] w-[360px] bg-[#151a2b] border border-slate-700 rounded-lg overflow-hidden z-10">
