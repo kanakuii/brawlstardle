@@ -84,7 +84,7 @@ export default function Footer() {
                     BrawlStardle is unofficial and is not endorsed by Supercell. 
                 </p> 
                 <p className={`${lilita.className} info-paragraph`}>For more information, see &nbsp;
-                    <a href="https://www.supercell.com/fan-content-policy"><span className="text-[#FFE35B]">Supercell's Fan Content Policy</span></a>
+                    <a href="https://www.supercell.com/fan-content-policy"><span className="text-[#FFE35B]">Supercell&apos;s Fan Content Policy</span></a>
                 </p>
 
 

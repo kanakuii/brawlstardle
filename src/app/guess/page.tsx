@@ -212,7 +212,7 @@ export default function GuessPage() {
   }
 
   function buildShareText() {
-    const header = `I got today's BrawlStardle ${diffDays} in ${guessKeys.length} tries!`;
+    const header = `I got the BrawlStardle ${diffDays} in ${guessKeys.length} tries!`;
 
     const grid = rows
       .map(r => [
