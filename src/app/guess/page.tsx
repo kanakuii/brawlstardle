@@ -69,14 +69,14 @@ type Brawler = {
   released: number;
 };
 
-type CellState = "correct" | "wrong";
+type CellState = "correct" | "wrong" | "higher" | "lower";
 
 type GuessRow = {
   brawler: { value: string; state: CellState };
   gender: { value: string; state: CellState };
   class: { value: string; state: CellState };
   rarity: { value: string; state: CellState };
-  release: { value: string; state: CellState };
+  release: { value: number; state: CellState };
   animate?: boolean;
 };
 
@@ -101,13 +101,24 @@ function getAllBrawlers(): Brawler[] {
 }
 
 
-function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
+
+export function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
+  const releaseGuess = guess.released;
+  const releaseAnswer = answer.released;
+
+  let releaseState: "correct" | "wrong" | "higher" | "lower" = "wrong";
+  if (releaseGuess != null && releaseAnswer != null) {
+    if (releaseGuess === releaseAnswer) releaseState = "correct";
+    else if (releaseGuess < releaseAnswer) releaseState = "higher"; 
+    else releaseState = "lower";
+  }
+
   return {
-    brawler: { value: guess.name, state: guess.key === answer.key ? "correct" : "wrong" },
+    brawler: { value: guess.name, state: guess.name === answer.name ? "correct" : "wrong" },
     gender: { value: guess.gender, state: guess.gender === answer.gender ? "correct" : "wrong" },
     class: { value: guess.class, state: guess.class === answer.class ? "correct" : "wrong" },
     rarity: { value: guess.rarity, state: guess.rarity === answer.rarity ? "correct" : "wrong" },
-    release: { value: String(guess.released), state: guess.released === answer.released ? "correct" : "wrong" },
+    release: { value: guess.released, state: releaseState },
   };
 }
 
@@ -323,7 +334,7 @@ export default function GuessPage() {
           return (
             <div key={guessKey} className="grid grid-cols-5 gap-6 place-items-center">
               <Guesses state={r.brawler.state} delayMs={0} animate={!!r.animate}>
-                <img className="h-[120px] w-[150px]" src={ `/brawler_portraits/${brawlerSlug(r.brawler.value)}_portrait.png`} alt={`${r.brawler.value}`}></img> 
+                <img className="h-[120px] w-[160px]" src={ `/brawler_portraits/${brawlerSlug(r.brawler.value)}_portrait.png`} alt={`${r.brawler.value}`}></img> 
               </Guesses>
 
               <Guesses state={r.gender.state} delayMs={150} animate={!!r.animate}>
@@ -339,7 +350,7 @@ export default function GuessPage() {
               </Guesses>
 
               <Guesses state={r.release.state} delayMs={600} animate={!!r.animate}>
-                <h2 className={`${lilita.className} info-heading`}>{r.release.value}</h2>
+                <h2 className={`${lilita.className} info-heading z-10`}>{r.release.value}</h2>
               </Guesses>
             </div>
           );

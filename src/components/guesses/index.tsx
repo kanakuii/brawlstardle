@@ -1,4 +1,4 @@
-type CellState = "correct" | "wrong";
+type CellState = "correct" | "wrong" | "higher" | "lower";
 
 export default function Guesses({
   children,
@@ -16,7 +16,7 @@ export default function Guesses({
   return (
     <div
       className={[
-        "text-center border w-[150px] h-[120px] flex justify-center items-center mt-[10px]",
+        "text-center border w-[160px] h-[120px] flex justify-center items-center mt-[10px]",
         "border-[#000000] border-[5px] shadow-[5px_5px_2px_rgba(0,0,0,0.5)]",
         animate ? "tile-flip" : "",
       ].join(" ")}
@@ -26,7 +26,15 @@ export default function Guesses({
         ["--tile-color" as any]: finalColor,
       }}
     >
-      {children}
+      { 
+        state === "higher" ? (
+          <img src="/up_arrow.png" className={["absolute inset-0 top-[1/2] left-[1/2] z-0 h-[100px] w-[110px]", animate ? "opacity-0 show-image" : "" ].join(" ")} style={{animationDelay: `${delayMs}ms`}}/>
+        ) : state === "lower" ? (
+          <img src="/down_arrow.png" className={["absolute inset-0 top-[1/2] left-[1/2] z-0 h-[100px] w-[110px]", animate ? "opacity-0 show-image" : "" ].join(" ")} style={{animationDelay: `${delayMs}ms`}}/>
+        ) : null 
+      }
+
+      {children} 
     </div>
   );
 }

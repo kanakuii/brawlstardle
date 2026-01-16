@@ -75,21 +75,39 @@ body {
   transform-style: preserve-3d;
 }
 
+.show-image {
+  animation: showImage 500ms ease forwards;
+  transform-style: preserve-3d;
+}
+
 @keyframes tileFlip {
   0% {
     transform: rotateX(0deg);
-    background-color: #1b2a57; /* pre-reveal */
+    background-color: #1b2a57; 
   }
   49% {
     transform: rotateX(90deg);
-    background-color: #1b2a57; /* still hidden */
+    background-color: #1b2a57; 
   }
   50% {
     transform: rotateX(90deg);
-    background-color: var(--tile-color); /* reveal color at midpoint */
+    background-color: var(--tile-color); 
   }
   100% {
     transform: rotateX(0deg);
     background-color: var(--tile-color);
+  }
+}
+
+@keyframes showImage {
+  0% {
+    opacity: 0;
+  }
+  75% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
   }
 }
