@@ -102,7 +102,7 @@ function getAllBrawlers(): Brawler[] {
 
 
 
-export function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
+function judgeGuess(guess: Brawler, answer: Brawler): GuessRow {
   const releaseGuess = guess.released;
   const releaseAnswer = answer.released;
 
